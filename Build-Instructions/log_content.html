@@ -150,6 +150,57 @@
 		    <td align="right">10mins</td>
 		</table>
 	
+		<p>All these tasks were competed over about 15 weeks of a busy student schedule, if anyone has more free time, they could complete it within a week max. Especially with instructions like this being already posted.</p>
+	
+		<p><b>Mechanical Assembly:</b></p>
+	
+			<p>For the mechanical assembly of this project, it is very easy and simple. The web cam connects directly to one of the USB ports provided by the raspberry pI, the PCB with connects also connects directly to the 40 pin pinout. To connect the audio speaker to the pI, connect the red positive wire to pin 8 on the raspberry pI, and the negative black wire to any ground pin on the pI.</p>
+			<p>To test each part separately, you could run each program separately as the main program calls the other programs.</p>
+		
+		<p><b>PCB / Soldering:</b></p>
+			
+			<p>PCB soldering toke place in my own house as I own a soldering kit from high school, I soldered the PCB in a pretty way but on one of the resistors I over soldered and tried to scrape it off and that resulted in damaging one the lines so I had to solder another wire in order to connect the damaged line. NOTE: I used the telescope in the prototype lab to view where the damaged line was.</p>
+		<p><b>Power Up:</b></p>
+	
+			<p>When you start up a raspberry pI, you should always start with updating it by using these commands: sudo apt-get update and sudo apt-get upgrade.</p>
+			<p>You’ll want to do this as your raspberry pI will get the latest patches and updates from the developers.</p>
+			<p>First of all, you’ll need to install python and the python/zbar library using the following commands:</p>
+			<ul>
+				<p>sudo apt-get install python-dev</p>
+				<p>sudo apt-get install python-pip</p>
+			</ul>
+			<p>Next, you’ll need to install pillow</p>
+			<ul>
+				<p>sudo apt-get install python-pip</p>
+				<p>sudo apt-get install python-httplib2</p>
+			</ul>
+		<p>After, go ahead and download the zbar library from this github account:<a href="https://github.com/npinchot/zbar"> Here</a></p>
+		<p>Click on “Clone Or download” and you should see it start downloading</p>
+		<p>After that, use the unzip command to extract the folder and the cd into the folder.</p>
+		<p>After you’re in the folder, execute the following command: python setup.py install –user</p>
+		<p>If everything was done right, you should get no errors and the files should be extracted.</p>
+		<p>After that, use the code that I provided in the downloads bellow and download all the downloads as they all link to each other.</p>
+		<p>After downloading all the files, you’ll need to compile the red_light.c, green_light.c and also softTone.c</p>
+		<p>Compiling them using: gcc –Wall –o executable name c_file.c – lwiringPi</p>
+		<p>Where ‘executable name’ is the name of the executable you’ll want them to be, ‘c_file.c’ is the source file. NOTE: make sure the executable names are the same as the ones in the bar_code.py file as they will be called from there.</p>
+		<p>If everything is done right, you should be able to run and scan a barcode, when it successfully scans the barcode, you should notice the light turning green and the beep audio sound coming from the speaker, after it scans it, you should be able to see the created file called student_number.txt which will contain the stored student numbers.</p>
+	
+	<p><b>Unit/Production testing:</b></p>
+	
+		<p>PCB testing should be done before hooking it up the raspberry pI as it could have shorts and could damage the pI, test it using a 5v supply and a multi meter to see if it converts the 5v into 3v going into the system and also check for shorts at every end. If you’re still having trouble, then use a telescope to go over the circuit lines to check to see if they’re not cut or damaged.</p>
+		<p>After doing so, you could assemble it on your raspberry pI and run the i2cdetect program by running: ./ i2cdetect -y 1. You can also check the LED by running ./traffic2B.</p>
+		<p></p>
+
+	<p><b>Is the project reproducible by following these instructions?</b></p>
+	
+		<p>Yes it is, this project can be easily reproduced by following the instructions above as I listed every download and every tool you’ll need to install on your pI. I also provided the code under my github page.</p>
+	<p><b>Downloads:</b></p>
+	
+		<p>All the downloads will be posted under my github page:</p>
+		<p>Source Files: <a href="https://github.com/rafyo127/rafyo127.github.io/tree/master/Build-Instructions/BARCODE_RAFF/PYTHON"> Here</a></p>
+
+
+
 
 
 </ARTICLE>
