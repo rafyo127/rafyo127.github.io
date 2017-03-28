@@ -1,0 +1,230 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>HumberParts</title>
+      <link rel="stylesheet" href="styles.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="./javascript.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+</head>
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #6495ED;
+}
+body {
+  padding-top:25px;
+  background-color:#606060;
+  margin-left:10px;
+  margin-right:10px;
+}
+.container {
+  max-width:600px;
+  margin:0 auto;
+  text-align:center;
+  -webkit-border-radius:6px;
+  -moz-border-radius:6px;
+  border-radius:6px;
+  background-color:#FAFAFA;
+}
+.head {
+  -webkit-border-radius:6px 6px 0px 0px;
+  -moz-border-radius:6px 6px 0px 0px;
+  border-radius:6px 6px 0px 0px;
+  background-color:#606060;
+  color:#111;
+}
+h2 {
+  text-align:center;
+  padding:18px 0 18px 0;
+  font-size: 1.4em;
+}
+input {
+  margin-bottom:10px;
+}
+textarea {
+  height:100px;
+  margin-bottom:10px;
+}
+input:first-of-type
+{
+  margin-top:35px;
+}
+input, textarea {
+  font-size: 1em;
+  padding: 15px 10px 10px;
+  font-family: 'Source Sans Pro',arial,sans-serif;
+  border: 1px solid #cecece;
+  background: #d7d7d7;
+  color:#FAFAFA;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 80%;
+  max-width: 600px;
+}
+::-webkit-input-placeholder {
+   color: #FAFAFA;
+}
+:-moz-placeholder {
+   color: #FAFAFA;  
+}
+::-moz-placeholder {
+   color: #FAFAFA; 
+}
+:-ms-input-placeholder {  
+   color: #FAFAFA;  
+}
+button {
+  margin-top:15px;
+  margin-bottom:25px;
+  background-color:#606060;
+  padding: 12px 45px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  -webkit-transition: .5s;
+  transition: .5s;
+  display: inline-block;
+  cursor: pointer;
+  width:30%;
+  color:#fff;
+}
+button:hover, .button:hover {
+  background:#000;
+}
+label.error {
+    font-family:'Source Sans Pro',arial,sans-serif;
+    font-size:1em;
+    display:block;
+    padding-top:10px;
+    padding-bottom:10px;
+    background-color:#d89c9c;
+    width: 80%;
+    margin:auto;
+    color: #FAFAFA;
+    -webkit-border-radius:6px;
+    -moz-border-radius:6px;
+    border-radius:6px;
+}
+
+/* media queries */
+@media (max-width: 700px) {
+  label.error {
+    width: 90%;
+  }
+  input, textarea {
+    width: 90%;
+  }
+  button {
+    width:90%;
+  }
+  body {
+  padding-top:10px;
+  }  
+}
+
+.message {
+    font-family:'Source Sans Pro',arial,sans-serif;
+    font-size:1.1em;
+    display:none;
+    padding-top:10px;
+    padding-bottom:10px;
+    background-color:#2ABCA7;
+    width: 80%;
+    margin:auto;
+    color: #FAFAFA;
+    -webkit-border-radius:6px;
+    -moz-border-radius:6px;
+    border-radius:6px;
+}
+</style>
+<body>
+<ul>
+  <li><a href="http://munro.humber.ca/~n01040349/index.html">Home</a></li>
+  <li><a class="active" href="#contact">Contact</a></li>
+  <li><a href="http://munro.humber.ca/~n01040349/About.html">About</a></li>
+</ul>
+<center><h2>Contact HumberParts</h2></center>
+<br><center><img src="logo.png" alt="HumberParts" style="width:90px;height:80px;"></center><br>
+<body>
+<form id="contact">
+  <div class="container">
+    <div class="head">
+      <h2>Say Hello</h2>
+    </div>
+    <input type="text" name="name" placeholder="Name" /><br />
+    <input  type="email" name="email" placeholder="Email" /><br />
+    <textarea type="text" name="message" placeholder="Message"></textarea><br />
+    <div class="message">Message Sent</div>
+    <button id="submit" type="submit">
+      Send!
+    </button>
+  </div>
+</form>
+</body>
+</body>
+<script>
+
+// When the browser is ready...
+  $(function() {
+    // validate
+    $("#contact").validate({
+        // Set the validation rules
+        rules: {
+            name: "required",
+            email: {
+                required: true,
+                email: true
+            },
+            message: "required",
+        },
+        // Specify the validation error messages
+        messages: {
+            name: "Please enter your name",
+            email: "Please enter a valid email address",
+            message: "Please enter a message",
+        },
+        // submit handler
+        submitHandler: function(form) {
+          //form.submit();
+           $(".message").show();
+           $(".message").fadeOut(4500);
+	   window.open('mailto:rafel_2009@live.com');
+        }
+    });
+  });
+
+</script>
+</html>
+

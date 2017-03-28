@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script id="myscript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=YOUR_APIKEY&sensor=false"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
+<script id="myscript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>     
+<link rel="stylesheet" href="styles.css">
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+.button {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #505050;
+
+  background-color: #505050;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+input[type=text] {
+width: 10%;
+padding: 6px 10px;
+margin: 4px 0;
+	box-sizing: border-box;
+border: 2px solid #ccc;
+	-webkit-transition: 0.5s;
+transition: 0.5s;
+outline: none;
+}
+
+input[type=text]:focus {
+border: 3px solid #555;
+}
+</style>
+<center>
+<h1>Sign out items </h1>
+<p><scanId></scanId><p>
+<p>Enter a valid Student ID</p>
+<input type="text" id="student_id" placeholder="Student ID..">
+<br>
+<font color="red"><p id="stat"></p></font>
+<p>Click 'Add' to start adding parts ! </p><a href="#" id="addNew">Add</a>
+<div id="addinput">
+<script>
+
+// Initialize Firebase
+var config = {
+apiKey: "AIzaSyAzAvBPuPQ-nNVlTSezToHiAeDCeaNbmQI",
+	authDomain: "humberparts.firebaseapp.com",
+	databaseURL: "https://humberparts.firebaseio.com",
+	storageBucket: "humberparts.appspot.com",
+	messagingSenderId: "552105114031"
+};
+
+firebase.initializeApp(config);
+var ref = firebase.database().ref("dirTest/test2/");
+var ref2 = firebase.database().ref("scan_id/");
+var scan_id = document.querySelector('scanId');
+var arr=new Array();
+
+$("#student_id").focus(function() {
+	//display the value
+	if(document.getElementById("student_id").value==""){
+		ref2.once("value").then(function(snapshot) {
+        		snapshot.forEach(function(childSnapshot) {
+                		document.getElementById("student_id").value=childSnapshot.val();       
+        		}); //childSnapshot
+  		}); //snapshot
+	}//if
+});
+
+function inputFunction() {
+    var id, text;
+    var num_input = window.current_index;
+    id = document.getElementById("student_id").value;
+    var date_p = new Date();
+
+    date_p.getDate().toString().slice(0, 24);
+    if(id == "" || id.length > 9 || id.length < 9){
+	text = "Invalid Student Number";
+    }else{
+	var part= new Array();
+	for(var i=0; i<num_input;i++){
+	    	//add data
+		try{
+
+		if(document.getElementById("part"+i).value !=null){
+	    		firebase.database().ref("dirTest/test2/"+id).update({
+				date0: date_p.toString(),
+				part0: document.getElementById("part"+i).value
+	    		});
+		}//1
+		i++;
+		if(document.getElementById("part"+i).value !=null){
+			 firebase.database().ref("dirTest/test2/"+id).update({
+                                date1: date_p.toString(),
+                                part1: document.getElementById("part"+i).value
+                        });
+		}//2
+		i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date2: date_p.toString(),
+                                part2: document.getElementById("part"+i).value
+                        });
+                }//3
+                i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date3: date_p.toString(),
+                                part3: document.getElementById("part"+i).value
+                        });
+                }//4
+                i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date4: date_p.toString(),
+                                part4: document.getElementById("part"+i).value
+                        });
+                }//5
+                i++;
+                if(document.getElementById("part"+i).value !=""){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date5: date_p.toString(),
+                                part5: document.getElementById("part"+i).value
+                        });
+                }//6
+                i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date6: date_p.toString(),
+                                part6: document.getElementById("part"+i).value
+                        });
+                }//7
+                i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date7: date_p.toString(),
+                                part7: document.getElementById("part"+i).value
+                        });
+                }//8
+                i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date8: date_p.toString(),
+                                part8: document.getElementById("part"+i).value
+                        });
+                }//9
+                i++;
+                if(document.getElementById("part"+i).value !=null){
+                        firebase.database().ref("dirTest/test2/"+id).update({
+                                date9: date_p.toString(),
+                                part9: document.getElementById("part"+i).value
+                        });
+                }//10
+		}catch(e){
+			console.log("ERROR: "+e);
+		}
+	}//for
+	text="";
+        text="Data Entered";
+	window.current_index=0;
+        document.getElementById("student_id").value="";
+	//set scanned value to null
+        firebase.database().ref("scan_id/").update({
+        	val_id: ""
+        });
+	sleep(500);
+	window.location.reload();
+	}//else
+	document.getElementById("stat").innerHTML=text;
+	//part input
+	for(var i=0; i<num_input;i++){
+	    console.log(document.getElementById("part"+i).value);
+	}//for-loop
+}//function
+
+function sleep(delay) {
+    var start = new Date().getTime();
+    while(new Date().getTime() < start + delay);
+}//sleep function
+
+//mod here
+$(function() {
+        var addDiv = $('#addinput');
+        var i = $('#addinput p').size();
+    	var id = document.getElementById("student_id").value;
+	
+        $('#addNew').live('click', function() {
+            	$('<p><input type="text" id="part'+i+'" value="" placeholder="Part #'+i+'"/><a href="#" id="remNew">Remove</a> </p>').appendTo(addDiv);
+                i++;
+		window.current_index=i;
+                if(i>12){
+                	alert('12 Parts Max !');
+                }
+               	return false;
+
+			
+
+        });//addNew
+
+        $('#remNew').live('click', function() {
+        	if(i>0){
+                	$(this).parents('p').remove();
+                    	i--;
+                }//if
+                return false;
+        });
+        	
+});//function
+
+function test(){
+
+	//add scanned id to field
+        if($("#part0").length){
+                $("#part0").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {                                             
+                                        document.getElementById("part0").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part1").length){
+                $("#part1").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part1").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part2").length){
+                $("#part2").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part2").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part3").length){
+                $("#part3").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part3").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part4").length){
+                $("#part4").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part4").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part5").length){
+                $("#part5").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part5").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part6").length){
+                $("#part6").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part6").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part7").length){
+                $("#part7").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part7").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+        if($("#part8").length){
+                $("#part8").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part8").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+         if($("#part9").length){
+                $("#part9").focus(function() {
+                        //display the value
+                        ref2.once("value").then(function(snapshot) {
+                                snapshot.forEach(function(childSnapshot) {
+                                        document.getElementById("part9").value=childSnapshot.val();       
+                                }); //childSnapshot
+                        }); //snapshot
+                });
+        }//if
+
+}//test
+//mod here
+</script>
+</center>
+<center>
+<button class="button" type="button" id="test" onclick="test()">Use Scanner</button><br><br>
+<br><button class="button" type="button" onclick="inputFunction()">Submit</button><br><br>
+<button class="button" onclick="location.href='admin.jsp'"> Back to Admin Page </button>
+</center> 
+</body>
+</html> 

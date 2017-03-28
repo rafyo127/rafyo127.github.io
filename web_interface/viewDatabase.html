@@ -1,0 +1,171 @@
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<title>View Database</title> 
+</head>
+<link rel="stylesheet" href="styles.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="./javascript.js"></script>
+<script
+    src="http://maps.googleapis.com/maps/api/js?key=YOUR_APIKEY&sensor=false">
+</script> 
+<script src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
+<style>
+input[type=text] {
+    width: 10%;
+    padding: 6px 10px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+input[type=text]:focus {
+    border: 3px solid #555;
+}
+</style>
+<body> 
+<center>
+<h2>Database</h2>
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+.button {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #606060;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+</style>
+
+<p>Total Students: <itemNum></itemNum></p>
+<p>Total parts currently taken out: <partNum></partNum> </p>
+<p>Search by ID: <input name="search_id" id="search_id" type="text"/>
+<button id="search_button" value="search_button" class="button" onclick="searchFunction();">Search Student</button></p>
+
+<table id="table">
+  <tr>
+    <th>Student ID</th>
+    <th>Date</th>
+    <th>Part Number</th>
+  </tr>
+</table>
+<script>
+	
+// Initialize Firebase
+	var config = {
+    		apiKey: "AIzaSyAzAvBPuPQ-nNVlTSezToHiAeDCeaNbmQI",
+    		authDomain: "humberparts.firebaseapp.com",
+    		databaseURL: "https://humberparts.firebaseio.com",
+    		storageBucket: "humberparts.appspot.com",
+    		messagingSenderId: "552105114031"
+  	};
+  	firebase.initializeApp(config);
+
+	var ref = firebase.database().ref("dirTest/test2/");
+	var itemN = document.querySelector('itemNum');
+	var part_num = document.querySelector('partNum');
+	var table = document.getElementById("table");
+	var row = table.insertRow(1);
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var arr= new Array();	
+
+	var date_old;
+	var date_now = new Date();
+	var oneDay = 24*60*60*1000;
+
+	ref.once("value").then(function(snapshot) {
+		var i=0;
+		var index=0;
+		var count=0;
+		var partCount=0;
+		snapshot.forEach(function(childSnapshot) {
+			//number of children
+			var numChild = snapshot.numChildren();
+      			var key1 = [childSnapshot.key];
+      			// childData will be the actual contents of the child
+      			var childData = childSnapshot.val();
+			var dateR = snapshot.child(key1.toString()).child("date"+count).val();
+			var partR = snapshot.child(key1.toString()).child("part"+count).val();
+			cell1.innerHTML+="<b>"+key1+"<b><br>";
+			
+			for(var i=0;i<20;i++){
+				if(snapshot.child(key1.toString()).child("date"+i).val()==null){
+					//do nothing
+				}else{
+					dateR = snapshot.child(key1.toString()).child("date"+i).val();
+					partR = snapshot.child(key1.toString()).child("part"+i).val();
+					cell1.innerHTML+="<br>";
+					date_old = new Date(dateR.toString());
+					var diffDays = Math.round(Math.abs((date_now.getTime() - date_old.getTime())/(oneDay)));
+					if(diffDays > 3){
+						//more than 3 days old
+						cell2.innerHTML+="<mark>"+dateR+"</mark><br>";
+					}else{
+						//less than 3 days old
+						cell2.innerHTML+=dateR+"<br>";	
+					}//else
+					cell3.innerHTML+=partR+"<br>";
+					partCount++;
+				}//if
+			}//for
+			cell2.innerHTML+="<hr>"; 
+			cell3.innerHTML+="<hr>"; 
+			//number of students
+			itemN.innerHTML=numChild;
+			//number of parts in total 
+			part_num.innerHTML=partCount;
+			//add to array for search
+			arr[index]=key1.toString();
+			index++;
+			count++;
+  		}); //childSnapshot
+  	}); //snapshot
+
+document.getElementById("search_button").onclick = function () {
+			var str = document.getElementById('search_id').value;
+			if(str =="" || str.length <9 || str.length >9){
+				alert('Invalid input !');
+			}else{
+                        	if(search(document.getElementById('search_id').value,arr) == true){
+                                	alert('Found Record !');
+					document.getElementById('search_id').value =""; 
+                        	}else{
+                                	alert('NOT FOUND');
+                        	}//else
+			}//main-else	       
+}; //button
+
+function search(str, arr) {
+    for (var j=0; j<arr.length; j++) {
+        if (arr[j].match(str)) return true;
+    }//for
+}//search
+
+</script>
+</center>
+<br><br> 
+<center><button class="button" onclick="location.href='admin.jsp'"> Back to Admin Page </button></center>
+</body> 
+</html>

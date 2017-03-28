@@ -1,0 +1,230 @@
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<title>Return Page</title> 
+<link rel="stylesheet" href="styles.css">
+</head> 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src="./javascript.js"></script>
+<script
+src="http://maps.googleapis.com/maps/api/js?key=YOUR_APIKEY&sensor=false">
+</script>
+<script src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
+<style>
+input[type=text] {
+width: 10%;
+padding: 6px 10px;
+margin: 4px 0;
+	box-sizing: border-box;
+border: 2px solid #ccc;
+	-webkit-transition: 0.5s;
+transition: 0.5s;
+outline: none;
+}
+
+input[type=text]:focus {
+border: 3px solid #555;
+}
+table, th, td {
+border: 1px solid black;
+}
+.button {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #606060;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+</style>
+<body> 
+<center> 
+<h1>Return Item</h1>
+<p>Enter Student ID:</p>
+<input type="text" id="student_id" placeholder="Student ID"></input>
+<br>
+<div id="container"/>
+<h4><ID><ID></h4>
+<table id="table">
+</table>
+<buttonhere></buttonhere>
+<someremove></someremove>
+<buttonsubmit></buttonsubmit>
+<button class="button" id="search" onclick="search_id()"> Search ID</button>
+<script>
+
+// Initialize Firebase
+var config = {
+apiKey: "AIzaSyAzAvBPuPQ-nNVlTSezToHiAeDCeaNbmQI",
+	authDomain: "humberparts.firebaseapp.com",
+	databaseURL: "https://humberparts.firebaseio.com",
+	storageBucket: "humberparts.appspot.com",
+	messagingSenderId: "552105114031"
+};
+firebase.initializeApp(config);
+var ref2 =firebase.database().ref("scan_id/");
+
+//add scanned id to field
+if($("#student_id").length){
+	$("#student_id").focus(function() {
+    	//display the value
+        ref2.once("value").then(function(snapshot) {
+        	snapshot.forEach(function(childSnapshot) {                                             
+            	document.getElementById("student_id").value=childSnapshot.val();       
+            }); //childSnapshot
+        }); //snapshot
+    });
+                
+}//if
+
+function search_id(){
+    var vals = new Array();
+    var keys = new Array();
+    var index=0;
+    var indexK=0;
+    var keyK=0;
+    var student_id = document.getElementById('student_id').value;
+    var ref = firebase.database().ref("dirTest/test2/"+student_id);	
+    var ID = document.querySelector('ID');
+    var button_all = document.querySelector('buttonhere');
+    var button_some = document.querySelector('someremove');
+    var button_submit = document.querySelector('buttonsubmit');
+    var table = document.getElementById("table");
+
+    if(student_id =="" || student_id.length < 9 || student_id.length > 9 ){	
+		alert('Invalid Input !')
+	}else{
+	ref.once("value").then(function(snapshot) {
+		snapshot.forEach(function(childSnapshot) {
+		    var key1 = [childSnapshot.key];
+		    var childData = childSnapshot.val();
+		    var numOfChildren=snapshot.numChildren();
+		    //checking when the key doesnt start with a 0.
+		    for(var i=0; i<10;i++){
+		    if(snapshot.child("part"+i).val()==null){
+		    //do nothing
+		    }else{
+		    vals[index]=snapshot.child("date"+i).val();
+		    index++;
+		    vals[index]=snapshot.child("part"+i).val();
+		    keys[indexK]=snapshot.child("part"+i).key;
+		    index++;
+		    indexK++;
+		    }//else
+		    }//for-loop for checking nulls
+		    //reset the index because it is going to override the array x2 
+		    index=0;
+		    });
+		//creating a table for the parts and dates
+		ID.innerHTML=student_id;
+		var x=document.createElement('TABLE');
+		x.setAttribute("id", "table");
+		document.body.appendChild(x);
+		var y = document.createElement("TR");
+		y.setAttribute("id", "myTr");
+		document.getElementById("table").appendChild(y);
+		var z = document.createElement("TD");
+		var countEach=0;
+		//placing the indexes of the array in a table.	
+		for(var i=0; i<vals.length;i++){
+		    countEach++;
+		    var t=document.createTextNode("Date #"+countEach+": "+vals[i]);
+		    z.appendChild(t);
+		    t=document.createElement("br");
+		    z.appendChild(t);
+		    document.getElementById("myTr").appendChild(z);
+		    i++;	
+		    t=document.createTextNode("Part #"+countEach+": "+vals[i]);
+		    z.appendChild(t);
+		    t=document.createElement("br");
+		    z.appendChild(t);
+		    t=document.createTextNode("Key: "+keys[keyK]);
+		    z.appendChild(t);
+		    t=document.createElement("hr");
+		    z.appendChild(t);
+		    keyK++;
+		}//for
+		
+		if(vals[0]==null){
+			alert('Student not found..');
+			location.reload();
+		}//if
+
+		//adding the buttons
+		button_all.innerHTML+="<button class='button' id='button_all' value='button_all'>Remove all parts</button>";
+		button_some.innerHTML+="<button class='button' id='button_some' value='button_some'>Remove Individual Part(s)</button>";	
+		//for removing seprate items, remove each child sepratly 
+
+		document.getElementById("button_some").onclick=function(){
+		    var count=1;
+		    button_submit.innerHTML+="<button class='button' id='button_submit' value='button_submit'>Remove</button><br>";
+		    container.appendChild(document.createElement("br"));
+		    container.innerHTML+="<p>Enter the parts you want to remove from the keys listed beside each part and then press the 'Remove' button..<p>";
+		    for(var g=0;g<vals.length/2;g++){
+			var input = document.createElement("input");
+			input.type = "text";
+			input.id = "part"+g;
+			input.placeholder="Part #"+count;
+			container.appendChild(input);
+			container.appendChild(document.createElement("br"));
+			count++;
+		    }//for
+		    button_submit.innerHTML+="<button id='button_submit' value='button_submit'>Remove</button><br>";
+		    document.getElementById("button_submit").onclick = function () {
+			var r;
+			for(r=0;r<vals.length/2;r++){
+			    if(document.getElementById("part"+r).value !=""){
+				//remove PART
+				ref.child(document.getElementById("part"+r).value).remove().then(function() {
+					console.log("Remove succeeded. PART" +r)
+					}).catch(function(error) {
+					    console.log("Remove failed: " + error.message)
+					    });
+
+				//remove DATE
+				var date_mod = document.getElementById("part"+r).value.slice(4, 5);
+				ref.child("date"+date_mod).remove().then(function() {
+					console.log("Remove succeeded. DATE "+r)
+					}).catch(function(error) {
+					    console.log("Remove failed: " + error.message)
+					    });
+			    }else{
+				//do nothing
+			    }//else
+			    console.log("input is NULL");
+			    window.location.reload();
+			}//for-remove
+		    };//Remove Button
+		};//Some Remove	
+
+		document.getElementById("button_all").onclick = function () {
+		    ref.remove().then(function() {
+			    console.log("Remove succeeded.")
+			    }).catch(function(error) {
+				console.log("Remove failed: " + error.message)
+				});
+		    window.location.reload();
+		};
+	});// data snapshot
+    }//if
+}//functiom
+</script>
+<br><br>
+<button class='button' onclick="location.href='admin.jsp'"> Back to Home Page </button>
+</center>
+</body> 
+</html>
